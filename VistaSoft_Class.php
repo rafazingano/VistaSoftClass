@@ -1,8 +1,8 @@
 <?php
 /**
- * Description of VistaSoft_Class
+ * Description of VistaSoft_Class 
  * @author Zingano
- */
+ **/
 class VistaSoft {
     private $fields     = null;
     private $key        = null; //'c9fdd79584fb8d369a6a579af1a8f681'; 
