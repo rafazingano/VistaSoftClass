@@ -20,7 +20,7 @@ class VistaSoft {
      * classe deve ser instanciada com a chave e 
      * ex: $vs = new VistaSoft('c9fdd79584fb8d369a6a579af1a8f681', 'sandbox-rest');
     */
-    function __construct($key = null, $url = null){ 
+    function __construct($key = null, $url = null){
         $this->key = $key;
         $this->url = $url;
         if(!isset($this->key)){ die('Falta informar uma chave'); }
@@ -30,6 +30,31 @@ class VistaSoft {
         //}
     }
     
+    function clear(){
+        $this->fields = null;
+        $this->filter = null;
+        $this->order = null;
+        $this->pagination = null;
+        $this->select = null;
+    }
+    
+    //function getKey() {
+    //    return $this->key;
+    //}
+
+    //function setKey($key) {
+    //    $this->key = $key;
+    //}
+    
+    //function getUrl() {
+    //    return $this->url;
+    //}
+
+    //function setUrl($key) {
+    //    $this->url = $key;
+    //}
+
+        
     /*
      * Função curl para conectar
     */
@@ -44,13 +69,22 @@ class VistaSoft {
      * Monta a url
     */
     public function getUrl(){
-        $url = $this->url . $this->from . '/' . $this->get . '?key=' . $this->key;
         $this->fields = isset($this->fields)? $this->fields : $this->getFields($this->from)[$this->from];
+        $url = $this->url . $this->from . '/' . $this->get . '?key=' . $this->key;
+        if($this->get == 'detalhes'){
+            $url .= '&imovel=' . $this->filter['Codigo'];            
+            $foto = ["Foto"=>["Foto","FotoPequena","Destaque"]];
+            if(!in_array('Foto', $this->fields)){ array_push($this->fields, $foto); }
+            if(!in_array('Caracteristicas', $this->fields)){ array_push($this->fields, "Caracteristicas"); }
+            if(!in_array('InfraEstrutura', $this->fields)){ array_push($this->fields, "InfraEstrutura"); }
+        }else{        
+            if(isset($this->filter)){ $data['filter'] = $this->filter; }
+            if(isset($this->order)){ $data['order'] = $this->order; }
+            if(isset($this->pagination)){ $data['paginacao'] = $this->pagination; }
+        }
         if(isset($this->fields)){ $data['fields'] = $this->fields; }
-        if(isset($this->filter)){ $data['filter'] = $this->filter; }
-        if(isset($this->order)){ $data['order'] = $this->order; }
-        if(isset($this->pagination)){ $data['paginacao'] = $this->pagination; }
         if(isset($this->select)){ $url .= '&pesquisa=' . json_encode( $data ); }
+        $this->clear();
         return $url;
     }
     
@@ -122,7 +156,7 @@ class VistaSoft {
     */
     public function get($get = 'listar'){
         $this->get = $get;
-        return $this->getCurl();
+        return $this->getCurl();      
     }
     
     /*
