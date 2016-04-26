@@ -108,7 +108,7 @@ class VistaSoft {
                 array_push($this->fields, "InfraEstrutura");
             }
         } else {
-
+            
             if (isset($this->filter)) {
                 $data['filter'] = $this->filter;
             }
@@ -128,7 +128,7 @@ class VistaSoft {
             $url .= '&showtotal=' . $this->showtotal;
         }
         $this->clear();
-        //echo $url . '<br><br>';
+       // echo $url . '<br><br>';
         return $url;
     }
 
